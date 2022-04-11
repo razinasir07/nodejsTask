@@ -68,12 +68,12 @@ app.use('/api/authFaculty', authFacultyRoute );
 app.use('/api/authStudent', authStudentRoute);
 
 
-app.use('*',(req,res)=> {
-  return res.status(404).json({
-    status: 'Not Found',
-    message: 'Page not found'
-  })
-})
+// app.use('*',(req,res)=> {
+//   return res.status(404).json({
+//     status: 'Not Found',
+//     message: 'Page not found'
+//   })
+// })
 
 //Error handling
 
