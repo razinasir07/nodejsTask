@@ -19,18 +19,15 @@ const helmet= require('helmet');
 
 mongoose.connect(
   "mongodb+srv://razinasir:node123@cluster0.cfyde.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-  (res)=>{
-    try{
-    console.log(res)
-    console.log('connected to database')
+  (error)=>{
+    if(error){
+      console.log('Connection not successfull with database')
     }
-    catch(err){
-      return res.status(400).json({
-        status:"Not found",
-        message:"Error while connecting to the database"
-      })
+    else{
+      console.log('Database connected successfully')
     }
-  }
+    }
+  
 );
 
 app.use(express.json());
