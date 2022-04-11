@@ -1,7 +1,9 @@
 
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const Faculty= require('../model/Faculty')
 
-module.exports = function (req, res, next) {
+module.exports = async function (req, res, next) {
   const token = req.header("auth-token");
   const tokenFac = req.header("authFaculty-token");
 
@@ -11,11 +13,12 @@ module.exports = function (req, res, next) {
 
   if (token) {
     try {
-      const verified = jwt.verify(token, "hdahioahsoihassodha");
+      const verified = jwt.verify(token, process.env.TOKEN_SECRET1);
       req.admin = verified;
 
       // const verifiedFac = jwt.verify(tokenFac, "facultyyyyyyy");
       // req.faculty=verifiedFac;
+      
 
       next();
     } catch (error) {
@@ -23,9 +26,12 @@ module.exports = function (req, res, next) {
     }
   } else if (tokenFac) {
     try {
-      const verified = jwt.verify(tokenFac, "facultyyyyyyy");
+      const verified = jwt.verify(tokenFac, process.env.TOKEN_FACULTY);
       req.faculty = verified;
 
+    //   const currentUser= await Faculty.findById(verified.id);
+    // if(!currentUser) return  res.send("The user of this token does not exixts");
+    
       // const verifiedFac = jwt.verify(tokenFac, "facultyyyyyyy");
       // req.faculty=verifiedFac;
 

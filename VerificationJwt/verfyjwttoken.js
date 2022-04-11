@@ -1,6 +1,8 @@
 const jwt= require('jsonwebtoken');
+require("dotenv").config();
+const Admin= require('../model/Admin')
 
-module.exports = function  (req,res, next){
+module.exports = async function  (req,res, next){
 
   const token= req.header('auth-token');
   
@@ -11,9 +13,12 @@ module.exports = function  (req,res, next){
   
 
   try {
-    const verified = jwt.verify(token,  "hdahioahsoihassodha");
+    const verified = jwt.verify(token, process.env.TOKEN_SECRET1);
     req.admin=verified;
   
+    const currentUser= await Admin.findById(verified.id);
+    if(!currentUser) return  res.status(400).send("The Admin for this toekn is not avaibale in database");
+    
 
     // const verifiedFac = jwt.verify(tokenFac, "facultyyyyyyy");
     // req.faculty=verifiedFac;

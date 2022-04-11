@@ -2,7 +2,13 @@ const router = require("express").Router();
 const FacultyAuth = require("../model/FacultyAuth");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const express = require("express");
 
+const app = express();
+
+app.use(cookieParser());
+require("dotenv").config();
 
 router.post('/register', async (req,res)=>{
 
@@ -34,7 +40,13 @@ router.post('/login', async (req, res)=>{
 
   if(!facPass) return res.send("Invalid Password");
 
-  const tokenFac = jwt.sign({ _id: faculty._id }, "facultyyyyyyy");
+  const tokenFac = jwt.sign({ _id: faculty._id }, process.env.TOKEN_FACULTY);
+
+   res.cookie("authFaculty-token", tokenFac, {
+     httpOnly: true,
+     expires: new Date(Date.now() + 25892000000),
+     secure:true
+   });
 
   res.header("authFaculty-token", tokenFac).send(tokenFac);
 })

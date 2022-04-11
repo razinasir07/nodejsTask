@@ -20,6 +20,7 @@ const ExaminationSchema = new mongoose.Schema({
   exam_studentId: {
     type: String,
     require: true,
+    unique:true
   },
 });
 

@@ -1,11 +1,17 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-const StudentAuthSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
+  
+  
+  name: {
+    type: String,
+    require: true,
+  },
   email: {
     type: String,
     require: true,
-    unique:true,
+    unique: true,
     validate(value) {
       if (!validator.isEmail(value)) {
         throw new Error("Email Invalid");
@@ -15,8 +21,16 @@ const StudentAuthSchema = new mongoose.Schema({
   password: {
     type: String,
     require: true,
-    unique:true
+    unique: true,
+  },
+  dob: {
+    type: String,
+    require: true,
+  },
+  userAddress: {
+    type: String,
+    require: true,
   },
 });
 
-module.exports = mongoose.model("studentAuth", StudentAuthSchema);
+module.exports = mongoose.model("user", UserSchema);

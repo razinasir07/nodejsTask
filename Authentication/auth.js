@@ -2,6 +2,17 @@ const router= require ('express').Router();
 const Admin= require('../model/Admin');
 const bcrypt= require('bcryptjs')
 const jwt= require('jsonwebtoken')
+const cookieParser= require('cookie-parser')
+const express = require("express");
+const { promisify } = require("util");
+
+const app = express();
+
+app.use(cookieParser());
+
+require("dotenv").config();
+
+
 
 router.post('/register', async (req,res)=>{
   console.log(req.body)
@@ -39,7 +50,17 @@ router.post('/login',async (req, res)=>{
 
   if( !validpass) return res.status(400).send('Invalid password');
 
-  const token = jwt.sign({ _id: admin._id }, "hdahioahsoihassodha");
+  const token = jwt.sign({ _id: admin._id }, process.env.TOKEN_SECRET1);
+
+  
+
+  res.cookie("auth-token", token, {
+    httpOnly:true,
+    expires: new Date(Date.now()+25892000000),
+    secure:true
+  });
+
+
 
   res.header('auth-token',token).send(token)
 

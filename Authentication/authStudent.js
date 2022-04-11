@@ -2,6 +2,13 @@ const router = require("express").Router();
 const StudentAuth = require("../model/StudentAuth");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const express = require("express");
+
+const app = express();
+
+app.use(cookieParser());
+require("dotenv").config();
 
 
 router.post('/register', async(req, res)=>{
@@ -35,7 +42,15 @@ router.post('/login', async (req,res)=>{
 
   if(!stuPass) return res.status(400).send("Invalid Password");
 
-  const tokenstu = jwt.sign({ _id: student._id }, "studenttttttttttttt");
+  const tokenstu = jwt.sign({ _id: student._id }, process.env.TOKEN_STUDDENT);
+
+
+   res.cookie("authStudent-token", tokenstu, {
+     httpOnly: true,
+     expires: new Date(Date.now() + 25892000000),
+     secure:true
+   });
+
 
    res.header("authStudent-token", tokenstu).send(tokenstu);
 })

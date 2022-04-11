@@ -1,71 +1,32 @@
 const router = require("express").Router();
 const verify= require("../VerificationJwt/verfyjwttoken")
-const Student= require('../model/Student');
 const AuthFacultyAdmin= require('../VerificationJwt/verifytokenfaculty')
 const AuthStudentFacAdmin = require("../VerificationJwt/verifystudent");
+const studentController= require('../Controllers/StudentController');
 
-router.post('/createStudent', verify, async (req, res)=>{
+const {body}= require('express-validator')
 
-  try{
-  const student = await Student.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    address: req.body.address,
-    collegeId:req.body.collegeId
-  });
-  res.send(student)
-} catch(err){
-res.send(err)
-}
-});
 
-router.get('/', AuthFacultyAdmin, async (req,res)=>{
-try{
-  const getAllStudents= await Student.find();
 
-  res.status(200).send(getAllStudents);
-}
-catch(err){
-  res.status(400).send(err)
-}
-})
 
-router.get('/:id', AuthStudentFacAdmin, async (req, res)=>{
+router.post(
+  "/createStudent",
+  verify,
+  [
+    body("name").not().isEmpty().trim().escape(),
+    body("address").not().isEmpty().trim().escape(),
+    body("email").isEmail().normalizeEmail()
+  ],
+  studentController.createStudent
+);
 
-  try {
-    const getStudentById= await Student.findById(req.params.id);
-    res.status(200).send(getStudentById);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-})
-router.delete("/:id", verify, async (req, res) => {
-  try {
-     await Student.deleteOne({_id: req.params.id});
-    res.status(200).send("Student Deleted");
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
+router.get('/', AuthFacultyAdmin, studentController.getStudents);
 
-router.put("/:id", verify, async (req, res) => {
-  try {
-     await Student.findOneAndUpdate({_id:req.params.id}, {
-       $set: {
-         name: req.body.name,
-         email: req.body.email,
-         password: req.body.password,
-         address: req.body.address,
-         collegeId: req.body.collegeId,
-       },
-     });
-  
-    res.send('Student Updated');
-  } catch (err) {
-    res.send(err);
-  }
-});
+router.get('/:id', AuthStudentFacAdmin, studentController.getStudentById)
+
+router.delete("/:id", verify, studentController.removeStudent);
+
+router.put("/:id", verify, studentController.updateStudent );
 
 
 module.exports= router;

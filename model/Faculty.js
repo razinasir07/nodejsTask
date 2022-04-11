@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 
 const FacultySChema = new mongoose.Schema({
+
+  user:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'user'
+
+  },
   name: {
     type: String,
     require: true,
@@ -16,6 +22,7 @@ const FacultySChema = new mongoose.Schema({
   teacherId: {
     type: String,
     require: true,
+    unique:true
   },
   room: {
     type: String,

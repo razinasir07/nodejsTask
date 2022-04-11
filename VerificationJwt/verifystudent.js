@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 module.exports = function (req, res, next) {
   const token = req.header("auth-token");
@@ -11,7 +12,7 @@ module.exports = function (req, res, next) {
 
   if (token) {
     try {
-      const verified = jwt.verify(token, "hdahioahsoihassodha");
+      const verified = jwt.verify(token, process.env.TOKEN_SECRET1);
       req.admin = verified;
 
       // const verifiedFac = jwt.verify(tokenFac, "facultyyyyyyy");
@@ -23,7 +24,7 @@ module.exports = function (req, res, next) {
     }
   } else if (tokenFac) {
     try {
-      const verified = jwt.verify(tokenFac, "facultyyyyyyy");
+      const verified = jwt.verify(tokenFac, process.env.TOKEN_FACULTY);
       req.faculty = verified;
 
       // const verifiedFac = jwt.verify(tokenFac, "facultyyyyyyy");
@@ -36,11 +37,13 @@ module.exports = function (req, res, next) {
   } 
   else if (tokenStu) {
     try {
-      const verified = jwt.verify(tokenStu, "studenttttttttttttt");
+      const verified = jwt.verify(tokenStu, process.env.TOKEN_STUDDENT);
       req.student = verified;
 
       // const verifiedFac = jwt.verify(tokenFac, "facultyyyyyyy");
       // req.faculty=verifiedFac;
+
+      
 
       next();
     } catch (error) {
